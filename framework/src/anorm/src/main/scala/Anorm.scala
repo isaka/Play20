@@ -131,6 +131,16 @@ package anorm {
       }
     }
 
+    implicit def rowToFloat: Column[Float] = Column.nonNull { (value, meta) =>
+      val MetaDataItem(qualified, nullable, clazz) = meta
+      value match {
+        case int: Int => Right(int: Float)
+        case long: Long => Right(long: Float)
+        case float: Float => Right(float)
+        case _ => Left(TypeDoesNotMatch("Cannot convert " + value + ":" + value.asInstanceOf[AnyRef].getClass + " to Float for column " + qualified))
+      }
+    }
+
     implicit def rowToBigInteger: Column[java.math.BigInteger] = Column.nonNull { (value, meta) =>
       import java.math.BigInteger
       val MetaDataItem(qualified, nullable, clazz) = meta
@@ -259,6 +269,7 @@ package anorm {
 
     private def getType(t: String) = t match {
       case "long" => Class.forName("java.lang.Long")
+      case "float" => Class.forName("java.lang.Float")
       case "int" => Class.forName("java.lang.Integer")
       case "boolean" => Class.forName("java.lang.Boolean")
       case _ => Class.forName(t)

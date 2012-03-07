@@ -58,6 +58,26 @@ object Formats {
   }
 
   /**
+   * Default formatter for the `Float` type.
+   */
+  implicit def floatFormat: Formatter[Float] = new Formatter[Float] {
+
+    override val format = Some("format.numeric", Nil)
+
+    def bind(key: String, data: Map[String, String]) = {
+      stringFormat.bind(key, data).right.flatMap { s =>
+        scala.util.control.Exception.allCatch[Float]
+          .either(java.lang.Float.parseFloat(s))
+          .left.map(e => Seq(FormError(key, "error.number", Nil)))
+      }
+    }
+
+    def unbind(key: String, value: Float) = Map(key -> value.toString)
+  }
+
+
+
+  /**
    * Default formatter for the `Long` type.
    */
   implicit def longFormat: Formatter[Long] = new Formatter[Long] {

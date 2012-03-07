@@ -271,6 +271,18 @@ object Forms {
    */
   val longNumber: Mapping[Long] = of[Long]
 
+
+  /**
+   * Constructs a simple mapping for a numeric field (using a Float type behind).
+   *
+   * For example:
+   * {{{
+   * Form("size" -> floatNumber)
+   * }}}
+   */
+  val floatNumber: Mapping[Float] = of[Float]
+
+
   /**
    * Constructs a simple mapping for a numeric field.
    *
